@@ -1,2 +1,11 @@
 
 __pycache__/
+.Rproj.user
+
+.DS_Store
+
+.idea/
+
+bioregulation/.Rhistory
+
+sars-ncov-2019/modules.py
