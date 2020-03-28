@@ -284,8 +284,8 @@ def seq_liner_full(mot=str, seqs=list):
     for seq in seqs:
         mp = seq.find(mot_seq)
         new_seq = ('_' * (c - mp) + seq)
-        # mp = new_seq.find(mot_seq)
-        # new_seq = new_seq[:mp] + new_seq[mp:mp + len(mot_seq)] + new_seq[mp + len(mot_seq):]
+        mp = new_seq.find(mot_seq)
+        new_seq = new_seq[:mp] + new_seq[mp:mp + len(mot_seq)] + new_seq[mp + len(mot_seq):]
         new_seqs.append(new_seq)
 
     sequence1 = new_seqs[0]
