@@ -9,7 +9,7 @@ client = MongoClient()
 db = client.proteins
 homo = db.homo_proteom
 gen = db.gen_proteom_beta
-proteom = [i for i in homo.find()]
+# proteom = [i for i in homo.find()]
 gproteom = [i for i in gen.find()]
 
 #ncov proteom
@@ -22,7 +22,7 @@ gproteom = [i for i in gen.find()]
 #         counter+=1
 
 
-covid_prots = fp('/Users/liquidbrain/projects/Proteomics/sars-ncov-2019/coronavirus.fasta')
+covid_prots = fp('/Users/liquidbrain/projects/Proteomics/sars-ncov-2019/covid-19.fasta')
 
 
 #compare homoXcorona

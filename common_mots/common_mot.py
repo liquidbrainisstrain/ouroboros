@@ -19,7 +19,9 @@ mots = db.mots_v3
 #start here
 
 #generate all mots
-mot = 'FYAPWCGHCK'
+
+
+mot = 'LLDVTPLSLGIE'
 
 gen_mots = []
 end_mots = []
@@ -35,13 +37,14 @@ result = []
 counter = 1
 
 # find all possible mots in proteom
+
 for mot in sel_mots:
     for pr in gproteom:
         if mot in pr['seq']:
             end_mots.append(mot)
     print(counter)
     counter += 1
-
+end_mots = list(set(end_mots))
 print('was found ', len(end_mots), ' actual mots')
 
 result = []
@@ -49,10 +52,15 @@ counter = 1
 for mot in end_mots:
     for pr in gproteom:
         if mot in pr['seq']:
-            pr.update({'motst':pr['seq'].find(mot),
-                       'motend':pr['seq'].find(mot) + len(mot),
-                       'length':len(pr['seq'])})
-            result.append(pr)
+            obj = {'name': pr['name'],
+                   'ref': pr['ref'],
+                   'organism': pr['organism'],
+                   'div_time': pr['div_time'],
+                   'seq': pr['seq'],
+                   'motst': pr['seq'].find(mot),
+                   'motend': pr['seq'].find(mot) + len(mot),
+                   'length': len(pr['seq'])}
+            result.append(obj)
     print(counter, "done")
     counter+=1
 
@@ -148,7 +156,8 @@ with open(filename, 'w') as file:
 #to mongo
 obj = {'mot': mot,
        'finds': result,
-       'common_seq': gens}
+       'common_seq': gens,
+       'alt_mots': end_mots}
 
 mots.insert_one(obj)
 

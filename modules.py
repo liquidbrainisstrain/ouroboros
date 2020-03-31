@@ -348,4 +348,38 @@ def dif_seq_liner(seq1,mot1,seq2,mot2):
         homology = round(с / len(seq2.strip('_')) * 100, 2)
     return [seq1, seq2, gen_letters, homology]
 
+def seq_liner_short(proteins=list, power = 0.8, seqtype ='tolerate'):
+    import collections
+
+    if seqtype == 'conservative':
+        gen_seq = ''
+        for i in range(len(proteins[0]['seq'])):
+            let = proteins[0]['seq'][i]
+            for j in range(len(proteins)):
+                if let != proteins[j]['seq'][i]:
+                    let = '_'
+                    break
+            gen_seq = gen_seq + let
+
+    if seqtype == 'tolerate':
+        #возможно нужно добавить в output
+        res_list = []
+        for i in range(len(proteins[0]['seq'])):
+            c = collections.Counter()
+            for j in range(len(proteins)):
+                c[proteins[j]['seq'][i]] += 1
+            res_list.append(c)
+
+        gen_seq = ''
+        for i in res_list:
+            if max(i.values()) / sum(i.values()) > power:
+                for key, value in i.items():
+                    if value == max(i.values()):
+                        gen_seq = gen_seq + key
+            else:
+                gen_seq = gen_seq + "_"
+
+    print(gen_seq)
+    return (gen_seq)
+
 #Type
