@@ -21,7 +21,7 @@ mots = db.mots_v3
 #generate all mots
 
 
-mot = 'LLDVTPLSLGIE'
+mot = 'AEPQIAMFCG'
 
 gen_mots = []
 end_mots = []
