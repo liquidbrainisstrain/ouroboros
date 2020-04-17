@@ -1,6 +1,5 @@
 from modules import fasta_parser as fp
 from modules import mot_finder as mf
-import pprint
 from pymongo import MongoClient
 import time
 import collections

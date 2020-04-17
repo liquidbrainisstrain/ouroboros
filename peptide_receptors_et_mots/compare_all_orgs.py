@@ -1,10 +1,5 @@
-from modules import seq_liner as SL
-from modules import mot_finder
 from modules import seq_liner_full as slf
-from modules import mot_changer as mch
-import time
 from pymongo import MongoClient
-import pprint
 
 #db init
 client = MongoClient()

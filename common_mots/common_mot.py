@@ -1,10 +1,5 @@
 from pymongo import MongoClient
-import collections
-import pprint
-from modules import mot_finder as mf
-from modules import seq_liner_full as slf
 from modules import mot_changer as mc
-import time
 
 #db init
 client = MongoClient()
@@ -64,8 +59,6 @@ for mot in end_mots:
     print(counter, "done")
     counter+=1
 
-for item in result:
-    work_data.insert_one(item)
 
 def seq_liner_pro(proteins=list, power = 0.8, seqtype ='tolerate'):
     import collections
@@ -133,9 +126,8 @@ def seq_liner_pro(proteins=list, power = 0.8, seqtype ='tolerate'):
     print(gen_seq)
     return([out, gen_seq])
 
-work = [i for i in work_data.find()]
 power = 0.85
-result = seq_liner_pro(work, power=power)
+result = seq_liner_pro(result, power=power)
 gens = result[1]
 result = sorted(result[0], key=lambda item: item["dT"], reverse=True)
 

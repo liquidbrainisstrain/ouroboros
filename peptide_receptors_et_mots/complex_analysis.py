@@ -1,4 +1,3 @@
-import pprint
 from pymongo import MongoClient
 from modules import dif_seq_liner as dsl
 from modules import fasta_parser

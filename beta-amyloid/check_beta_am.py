@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 from modules import mot_finder as mf
-import pprint
 
 #db init
 client = MongoClient()

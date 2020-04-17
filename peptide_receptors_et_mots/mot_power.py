@@ -1,6 +1,4 @@
-import pprint
 from modules import mot_changer as mch
-import time
 from pymongo import MongoClient
 
 filename = '/Users/liquidbrain/Desktop/motpowerres.txt'

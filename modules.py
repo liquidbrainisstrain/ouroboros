@@ -382,7 +382,7 @@ def seq_liner_short(proteins=list, power = 0.8, seqtype ='tolerate'):
     print(gen_seq)
     return (gen_seq)
 
-def seq_liner_pro(proteins=list, power = 0.8, seqtype ='tolerate'):
+def seq_liner_large(proteins=list, power = 0.8, seqtype ='tolerate'):
     import collections
     mmp = 0
     mlen = 0

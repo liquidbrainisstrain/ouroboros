@@ -1,4 +1,3 @@
-from modules import seq_liner as SL
 import time
 from pymongo import MongoClient
 import pprint

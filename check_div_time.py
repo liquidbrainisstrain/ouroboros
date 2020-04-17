@@ -1,6 +1,4 @@
 from pymongo import MongoClient
-from modules import div_time_dict as dtd
-import pprint
 import collections
 #db init
 client = MongoClient()

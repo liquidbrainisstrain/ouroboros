@@ -1,8 +1,7 @@
 from pymongo import MongoClient
-from modules import fasta_parser
 import time
 import collections
-import pprint
+
 start_time = time.time()
 #db init
 client = MongoClient()
