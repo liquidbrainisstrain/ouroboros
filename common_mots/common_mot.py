@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-from modules import mot_changer as mc
 
 #db init
 client = MongoClient()
@@ -15,15 +14,27 @@ mots = db.mots_v3
 
 #generate all mots
 
+def mot_changer(mot):
+    amac = ['G', 'P', 'A', 'V', 'L', 'I', 'M', 'C', 'F', 'Y', 'W', 'H', 'K', 'R', 'Q', 'N', 'E', 'D', 'S', 'T']
+    c = 0
+    res = []
+    while c < len(mot):
+        for i in amac:
+            new_mot = mot[:c] + i + mot[c + 1:]
+            if new_mot != mot:
+                res.append(new_mot)
+        c += 1
+    return res
 
-mot = 'EVDAAVTPEERHL'
+mot = input('type mot in uppercase ')
+# mot = 'EVDAAVTPEERHL'
 
 gen_mots = []
 end_mots = []
 gen_proteom_seqs = [i['seq'] for i in gproteom]
 
-for i in mc(mot):
-    for j in mc(i):
+for i in mot_changer(mot):
+    for j in mot_changer(i):
         gen_mots.append(j)
 
 sel_mots = list(set(gen_mots))

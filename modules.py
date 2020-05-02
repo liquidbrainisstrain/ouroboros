@@ -447,3 +447,21 @@ def seq_liner_large(proteins=list, power = 0.8, seqtype ='tolerate'):
         out.append(new_obj)
     print(gen_seq)
     return([out, gen_seq])
+
+def equal_seq_comparator(seq1, seq2):
+    """
+    Function compares two protein sequences with equal length, lined by identical zone
+    Symbol _ was used for lining sequences to the same length
+    Function result - generated sequence with letters on the same positions in the both sequences
+    it also contains similarity percent
+    """
+    c = 0
+    gen_letters = ''
+    for i in range(len(seq1)):
+        if seq1[i] == seq2[i]:
+            gen_letters = gen_letters + seq1[i]
+            c += 1
+        else:
+            gen_letters = gen_letters + '_'
+    homology = [c, len(seq1.split('_')), len(seq2.split('_'))]
+    return seq1, seq2, gen_letters, homology
