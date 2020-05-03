@@ -12,7 +12,7 @@ gen = db.gen_proteom_beta
 # proteom = [i for i in homo.find()]
 gproteom = [i for i in gen.find()]
 
-covid_prots = fp('/Users/liquidbrain/projects/Proteomics/sars-ncov-2019/covid-19.fasta')
+covid_prots = fp('/viruses analysis/covid-19.fasta')
 
 #compare otherXcorona
 counter = 0
@@ -34,7 +34,7 @@ for protein in covid_prots:
         if counter % 1000 == 0:
             print(counter)
     result = sorted(result, key=lambda item: item[7], reverse=True)
-    filename = '/Users/liquidbrain/projects/Proteomics/sars-ncov-2019/results/' + protein['name'] + '.txt'
+    filename = '/Users/liquidbrain/projects/Proteomics/viruses analysis/results/' + protein['name'] + '.txt'
     with open(filename, 'a') as file:
         for i in result:
             line = "organism - {}\n   divtime = {} \n   homology = {} \n   organism protein name - {}\n   virus protein " \
@@ -43,7 +43,7 @@ for protein in covid_prots:
 
 
 
-# with open('/Users/liquidbrain/projects/Proteomics/sars-ncov-2019/result.txt', 'a') as file:
+# with open('/Users/liquidbrain/projects/Proteomics/viruses analysis/result.txt', 'a') as file:
 #     for i in result:
 #         line = "organism - {}\n   divtime = {} \n   homology = {} \n   organism protein name - {}\n   virus protein " \
 #                "name{}\n{}\n{}\n{}\n-------------------\n".format(i[6], i[7], i[3], i[4], i[5], i[0], i[1], i[2])
