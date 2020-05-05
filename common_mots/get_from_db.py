@@ -61,6 +61,7 @@ def seq_liner_short(proteins=list, power = 0.8, seqtype ='tolerate'):
     print(gen_seq)
     return (gen_seq)
 
+#input from keyboard
 mot = input('type mot in uppercase ')
 power = float(input('type common sequence strenth from 0.51 to 0.99 '))
 # mot = 'LLDVTPLTLGID'

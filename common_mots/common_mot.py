@@ -33,6 +33,11 @@ gen_mots = []
 end_mots = []
 gen_proteom_seqs = [i['seq'] for i in gproteom]
 
+#solo change
+# for i in mot_changer(mot):
+#     gen_mots.append(i)
+
+#double change
 for i in mot_changer(mot):
     for j in mot_changer(i):
         gen_mots.append(j)
