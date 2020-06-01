@@ -348,7 +348,19 @@ def dif_seq_liner(seq1,mot1,seq2,mot2):
         homology = round(с / len(seq2.strip('_')) * 100, 2)
     return [seq1, seq2, gen_letters, homology]
 
-def seq_liner_short(proteins=list, power = 0.8, seqtype ='tolerate'):
+def seq_liner_short(proteins=list, power = 0.8, seqtype ='tolerate', letters = False):
+    """
+    This function generates common sequence for list of aligned proteins
+    :param proteins: A list of aligned proteins. An anchor for alignment is 'mot', it is a short, less or more
+     conservative fragment for all sequences. All sequences was aligned by this mot. Symbol _ was used for
+    positioning one sequence under the another in one table or matrix
+    :param power: Percentage value for letter in this position which is a column in the matrix of sequences
+    :param seqtype: option 'conservative' is for power = 100% if less use option 'tolerate'
+    :param letters: use True, if you need percentage value for each letter
+    :return:Common sequence as string and letters value for each position of common sequence if letters = Tru
+    as Counter obj
+    """
+
     import collections
 
     if seqtype == 'conservative':
@@ -379,8 +391,9 @@ def seq_liner_short(proteins=list, power = 0.8, seqtype ='tolerate'):
             else:
                 gen_seq = gen_seq + "_"
 
-    print(gen_seq)
-    return (gen_seq)
+    if letters == True:
+        return (gen_seq, res_list)
+    else: return (gen_seq)
 
 def seq_liner_large(proteins=list, power = 0.8, seqtype ='tolerate'):
     import collections
@@ -445,7 +458,7 @@ def seq_liner_large(proteins=list, power = 0.8, seqtype ='tolerate'):
             'seq': item['seq']
         }
         out.append(new_obj)
-    print(gen_seq)
+    # print(gen_seq)
     return([out, gen_seq])
 
 def equal_seq_comparator(seq1, seq2):
@@ -460,8 +473,9 @@ def equal_seq_comparator(seq1, seq2):
     for i in range(len(seq1)):
         if seq1[i] == seq2[i]:
             gen_letters = gen_letters + seq1[i]
-            c += 1
+            if seq1[i] != "_":
+                c+=1
         else:
             gen_letters = gen_letters + '_'
-    homology = [c, len(seq1.split('_')), len(seq2.split('_'))]
+    homology = [c, len(seq1.strip('_')), len(seq2.strip('_'))]
     return seq1, seq2, gen_letters, homology

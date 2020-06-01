@@ -1,9 +1,7 @@
 Proteomics
 
-It is my chaotic proteomics project with huge number of tools.
-These tools were created by myself, but I am sure analogs can be found
-in the network. So, i think it is useless for you. 
-Nevertheless, I leave here some instructions and reviews.
+Here is my chaotic proteomics project with a huge number of tools. I actually created  them myself, however,
+ I am pretty sure analogues can be found online. As such, they may not come in handy for you. Yet I decided to leave some instructions and reviews here  - you never know!
 
 Modules here
 
