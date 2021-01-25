@@ -107,12 +107,12 @@ def block_output(info):
 
 
 res = makeblock(info=mots.find_one({'mot':mot}), size=size)
-res = analyse_block(res)
-# pprint.pprint(res)
-
-log = input('Необходим вывод в файл? y/n ')
-if log == 'y':
-    block_output(res)
+# res = analyse_block(res)
+# # pprint.pprint(res)
+#
+# log = input('Необходим вывод в файл? y/n ')
+# if log == 'y':
+#     block_output(res)
 
 
 # log = input('Сохранить измененный объект в базе? y/n')
