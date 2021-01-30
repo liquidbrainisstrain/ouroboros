@@ -11,7 +11,7 @@ enz = db.enzymes
 
 # in_prot = input('Введите название белка в соответсвии с названием в db ')
 power = float(input('ввести мощность общей последовательности '))
-in_prot = 'APP'
+in_prot = 'Membrane Protein'
 
 finds = enz.find_one({'name': in_prot})['mots']
 
@@ -19,7 +19,7 @@ for i in range(len(finds)):
     print(i, finds[i]['mot'])
 
 motnumb = int(input('Введите номер мота из списка '))
-seqs = [[i['organism'], i['name'], i['dT'], i['seq']] for i in finds[motnumb]['finds']]
+seqs = [[i['organism'], i['name'], i['dT'], i['lseq']] for i in finds[motnumb]['finds']]
 res = sl(finds[motnumb]['finds'], power=power, seqtype='tolerate', letters=False)
 
 pprint.pprint(res)

@@ -1,33 +1,22 @@
 import PySimpleGUI as sg
+from pymongo import MongoClient
+
 from apps.blockapp import blockapp
+from apps.findmotsoneprotapp import findmotsoneprot
 
-def commonmots():
-    import PySimpleGUI as sg
-
-    sg.theme('BluePurple')
-
-    layout = [
-        [sg.Text('Введи белок')],
-        [sg.Input(key='protein', size=(5, 1))],
-        [sg.Button('Submit')]
-    ]
-
-    window = sg.Window('Определение диффузного мота', layout)
-
-    while True:  # Event Loop
-        event, values = window.read()
-        print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Exit':
-            break
-
-    window.Close()
+client = MongoClient()
+db = client.proteins
+data = db.enzymes
+gen = db.gen_proteom_beta
 
 
 sg.theme('BluePurple')
+protlist = [i['name'] for i in data.find()]
+
 
 layout0 = [
         [sg.Button('Find mots')],
-        [sg.Button('Analyse Block')],
+        [sg.Button('Analyse Block'), sg.Combo(protlist, key='-PROTEIN-', size=(20, 5))],
         [sg.Button('Exit')]
     ]
 
@@ -40,11 +29,11 @@ while True:  # Event Loop
         break
     if event0 == 'Find mots':
         window0.Hide()
-        commonmots()
+        findmotsoneprot()
         window0.UnHide()
     if event0 == 'Analyse Block':
         window0.Hide()
-        blockapp()
+        blockapp(values0['-PROTEIN-'])
         window0.UnHide()
 
 window0.Close()

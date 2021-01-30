@@ -222,7 +222,7 @@ def fasta_parser(proteom_file):
 
     for prot in proteom:
         obj = {
-            "name": ' '.join(prot[0].split("OS=")[0].split(" ")[1:-1]),
+            'name': ' '.join(prot[0].split("OS=")[0].split(" ")[1:-1]),
             'id': prot[0].split("|")[1],
             'ref': 'https://www.uniprot.org/uniprot/' + prot[0].split("|")[1],
             'organism': prot[0].split("OS=")[1].split('OX=')[0][0:-1],
@@ -365,10 +365,10 @@ def seq_liner_short(proteins=list, power = 0.8, seqtype ='tolerate', letters = F
 
     if seqtype == 'conservative':
         gen_seq = ''
-        for i in range(len(proteins[0]['seq'])):
-            let = proteins[0]['seq'][i]
+        for i in range(len(proteins[0]['lseq'])):
+            let = proteins[0]['lseq'][i]
             for j in range(len(proteins)):
-                if let != proteins[j]['seq'][i]:
+                if let != proteins[j]['lseq'][i]:
                     let = '_'
                     break
             gen_seq = gen_seq + let
@@ -376,10 +376,10 @@ def seq_liner_short(proteins=list, power = 0.8, seqtype ='tolerate', letters = F
     if seqtype == 'tolerate':
         #возможно нужно добавить в output
         res_list = []
-        for i in range(len(proteins[0]['seq'])):
+        for i in range(len(proteins[0]['lseq'])):
             c = collections.Counter()
             for j in range(len(proteins)):
-                c[proteins[j]['seq'][i]] += 1
+                c[proteins[j]['lseq'][i]] += 1
             res_list.append(c)
 
         gen_seq = ''

@@ -1,21 +1,22 @@
-def blockapp():
+def blockapp(protein):
     import textwrap
 
     import PySimpleGUI as sg
     from pymongo import MongoClient
 
-    from apps.tools import makeblock
-    from apps.tools import clean_block
-    from apps.tools import freq_check
+    from .seq_tools import makeblock
+    from .seq_tools import clean_block
+    from .seq_tools import freq_check
 
     # db init
     client = MongoClient()
     db = client.proteins
-    mots = db.mots_v3
+    data = db.enzymes
+    work_protein = data.find_one({'name':protein})
 
     sg.theme('BluePurple')
 
-    motslist = [i['mot'] for i in mots.find()]
+    motslist = [i['mot'] for i in work_protein['mots']]
 
     layout = [[sg.Text('Анализируемый мот'), sg.Combo(motslist, key='mot', size=(20, 5)),
                sg.Text(size=(15, 1), key='motout')],
@@ -38,7 +39,10 @@ def blockapp():
             break
         if event == 'Make block':
             window['motout'].Update(values['mot'])
-            res = makeblock(info=mots.find_one({'mot': values['mot']}), size=int(values['size']))
+            for i in work_protein['mots']:
+                if i['mot']==values['mot']:
+                    info = i
+            res = makeblock(info=info, size=int(values['size']))
 
             headers = ['block', 'name', 'organism', 'dT']
             weights = res['block_weights']

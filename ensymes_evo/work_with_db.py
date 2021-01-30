@@ -9,9 +9,9 @@ db = client.proteins
 enz = db.enzymes
 
 
-protein = enz.find_one({'name': "APP"})
+protein = enz.find_one({'name': "Membrane Protein"})
 
-mot = 'QKLEFSAEDV'
+mot = 'IAMACLFI'
 
 for i in protein['mots']:
     if i['mot'] == mot:
