@@ -162,6 +162,7 @@ def mot_changer(mot):
             if new_mot != mot:
                 res.append(new_mot)
         c += 1
+    res.append(mot)
     return res
 
 def seq_liner(proteins=list):
@@ -188,3 +189,29 @@ def seq_liner(proteins=list):
         proteins[n].update({'lseq':seq})
 
     return(proteins)
+
+def fasta_to_obj(proteom):
+    from itertools import groupby
+    def fasta_iter(fasta_name):
+        fin = open(fasta_name, 'rb')
+
+        faiter = (x[1] for x in groupby(fin, lambda line: str(line, 'utf-8')[0] == ">"))
+        for header in faiter:
+            name = str(header.__next__()[1:].strip(), 'utf-8')
+            seq = "".join(str(s, 'utf-8').strip() for s in faiter.__next__())
+            obj = {
+                'name': ' '.join(name.split("OS=")[0].split(" ")[1:-1]),
+                'id': name.split("|")[1],
+                'ref': 'https://www.uniprot.org/uniprot/' + name.split("|")[1],
+                'organism': name.split("OS=")[1].split('OX=')[0][0:-1],
+                'seq': seq
+            }
+            yield obj
+
+    fiter = fasta_iter(proteom)
+    out_obj = []
+    for ff in fiter:
+        out_obj.append(ff)
+
+    return out_obj
+

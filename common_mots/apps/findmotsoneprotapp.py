@@ -1,4 +1,4 @@
-def findmotsoneprot():
+def findmotsoneprotapp():
     import time
     import PySimpleGUI as sg
     from pymongo import MongoClient
@@ -12,7 +12,7 @@ def findmotsoneprot():
     out = db.enzymes
     gen = db.gen_proteom_beta
 
-    sg.theme('Light Brown 3')
+    sg.theme('DarkPurple6')
 
     layout = [[sg.Text('Protein info')],
               [sg.Text('Protein name'), sg.Input(key='-PROTNAME-', size=(20, 1))],
@@ -30,6 +30,7 @@ def findmotsoneprot():
 
     window = sg.Window('Find mots for block and build tools', layout, finalize=True)
 
+#EVENT LOOP MOTHER
     while True:
         event, values = window.read()
         # print(event, values)

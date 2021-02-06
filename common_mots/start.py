@@ -1,39 +1,55 @@
+import os
+
 import PySimpleGUI as sg
 from pymongo import MongoClient
 
 from apps.blockapp import blockapp
-from apps.findmotsoneprotapp import findmotsoneprot
+from apps.findmotsoneprotapp import findmotsoneprotapp
+from apps.findmotsproteomsapp import findmotsproteomsapp
+from apps.findprotapp import findprotapp
 
 client = MongoClient()
 db = client.proteins
 data = db.enzymes
 gen = db.gen_proteom_beta
 
+os.environ['ROOT'] = os.path.dirname(os.path.abspath(__name__))
 
-sg.theme('BluePurple')
+sg.theme('DarkPurple6')
 protlist = [i['name'] for i in data.find()]
 
-
 layout0 = [
-        [sg.Button('Find mots')],
-        [sg.Button('Analyse Block'), sg.Combo(protlist, key='-PROTEIN-', size=(20, 5))],
-        [sg.Button('Exit')]
+    [sg.Button('Find Protein')],
+    [sg.Button('Find Mots')],
+    [sg.Combo(protlist, key='-PROTEIN-', size=(20, 5))],
+    [sg.Button('Analyse Block', disabled=False)],
+    [sg.Button('Compare Proteoms')],
+    [sg.Button('Exit')]
     ]
 
 window0 = sg.Window('Выбери прогу', layout0)
 
 while True:  # Event Loop
     event0, values0 = window0.read()
-    # print(event0, values0)
+    print(event0, values0)
     if event0 == sg.WIN_CLOSED or event0 == 'Exit':
         break
-    if event0 == 'Find mots':
+    elif event0 == 'Find Protein':
         window0.Hide()
-        findmotsoneprot()
+        findprotapp()
         window0.UnHide()
-    if event0 == 'Analyse Block':
+    elif event0 == 'Find Mots':
+        window0.Hide()
+        findmotsoneprotapp()
+        window0.UnHide()
+    elif event0 == 'Analyse Block':
         window0.Hide()
         blockapp(values0['-PROTEIN-'])
         window0.UnHide()
+    elif event0 == 'Compare Proteoms':
+        window0.Hide()
+        findmotsproteomsapp()
+        window0.UnHide()
+
 
 window0.Close()

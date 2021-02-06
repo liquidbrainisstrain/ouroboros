@@ -4,9 +4,9 @@ import pprint
 import PySimpleGUI as sg
 
 from pymongo import MongoClient
-from seq_tools import mot_finder2
-from seq_tools import mot_changer
-from seq_tools import seq_liner
+# from seq_tools import mot_finder2
+# from seq_tools import mot_changer
+# from seq_tools import seq_liner
 
 #db init
 client = MongoClient()
