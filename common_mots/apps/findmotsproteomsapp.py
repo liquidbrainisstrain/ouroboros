@@ -5,20 +5,22 @@ def findmotsproteomsapp():
 
     import PySimpleGUI as sg
 
-    from .seq_tools import fasta_to_obj, mot_finder2
+    from .seq_tools import fasta_to_obj, mot_finder, mot_finder_sequent
 
     sg.theme('DarkPurple6')
+    stype = ['sequent', 'casual']
     ROOT = os.environ.get('ROOT')
     proteomspath = os.path.join(ROOT, "data", "proteoms")
     proteoms = os.listdir(path=proteomspath)
 
     layout = [
-        [sg.Text('FROM proteom path'), sg.Combo(proteoms, key="-PATHFROM-"), sg.FileBrowse()],
-        [sg.Text('TO proteom path'), sg.Combo(proteoms, key="-PATHTO-"), sg.FileBrowse()],
-        [sg.Text('Mot length'), sg.Input(key="-MOTLEN-")],
+        [sg.Text('FROM proteom path', size=(17,1)), sg.Combo(proteoms, key="-PATHFROM-", size=(40,1)), sg.FileBrowse()],
+        [sg.Text('TO proteom path', size=(17,1)), sg.Combo(proteoms, key="-PATHTO-", size=(40,1)), sg.FileBrowse()],
+        [sg.Text('Mot length'), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), size=(5,1), initial_value=8),
+         sg.Text("Search way"), sg.InputOptionMenu(stype, key='-STYPE-', size=(10, 5), text_color='black')],
         [sg.Text("Press GO to start, don't worry, it may take a while")],
-        [sg.Text('Proteom pass through'), sg.ProgressBar(100, size=(20, 20), orientation='h', key='-PROTEOMPROG-')],
-        [sg.Button('Go'), sg.Button('Exit')]
+        [sg.Text('Proteom pass through'), sg.ProgressBar(100, size=(34, 20), orientation='h', key='-PROTEOMPROG-')],
+        [sg.Button('Back'), sg.Button('Start'), sg.Button('Info')]
     ]
 
     window = sg.Window('Compare proteoms', layout)
@@ -26,9 +28,9 @@ def findmotsproteomsapp():
     while True:  # Event Loop
         event, values = window.read()
         # print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event == sg.WIN_CLOSED or event == 'Back':
             break
-        if event == 'Go':
+        if event == 'Start':
             counter = 0
             proteomfrom = fasta_to_obj(values["-PATHFROM-"])
             proteomto = fasta_to_obj(values["-PATHTO-"])
@@ -39,22 +41,41 @@ def findmotsproteomsapp():
             for proteinfrom in proteomfrom:
                 seq1 = proteinfrom['seq']
                 mots = []
-                for proteinto in proteomto:
-                    counter += 1
-                    if counter % 100 == 0:
-                        window['-PROTEOMPROG-'].update_bar(counter, total)
-                        # print(counter)
+                if values['-STYPE-'] == 'sequent':
+                    for proteinto in proteomto:
+                        counter += 1
+                        if counter % 100 == 0:
+                            window['-PROTEOMPROG-'].update_bar(counter, total)
+                            # print(counter)
 
-                    if len(seq1) < motlen:
-                        break
-                    else:
-                        res = mot_finder2(seq1, proteinto['seq'], motlen=motlen)
-                        if len(res) > 0:
-                            for i in res:
-                                motobj = {'mot': i,
-                                          'protein': f'{proteinto["name"]}/{proteinto["organism"]}/{proteinto["id"]}'}
-                                mots.append(motobj)
-                                seq1 = seq1.replace(i, "_")
+                        if len(seq1) < motlen:
+                            break
+                        else:
+                            res = mot_finder_sequent(seq1, proteinto['seq'], motlen=motlen)
+                            if len(res) > 0:
+                                for i in res:
+                                    motobj = {'mot': i,
+                                              'protein': f'{proteinto["name"]}/{proteinto["organism"]}/{proteinto["id"]}'}
+                                    mots.append(motobj)
+                                    seq1 = seq1.replace(i, "_")
+                else: #casual type if search
+                    for proteinto in proteomto:
+                        counter += 1
+                        if counter % 100 == 0:
+                            window['-PROTEOMPROG-'].update_bar(counter, total)
+                            # print(counter)
+
+                        if len(seq1) < motlen:
+                            break
+                        else:
+                            res = mot_finder(seq1, proteinto['seq'], motlen=motlen)
+                            if len(res) > 0:
+                                for i in res:
+                                    motobj = {'mot': i,
+                                              'protein': f'{proteinto["name"]}/{proteinto["organism"]}/{proteinto["id"]}'}
+                                    mots.append(motobj)
+
+
                 if len(mots) > 0:
                     for mot in mots:
                         mot.update({'pos': proteinfrom['seq'].find(mot['mot'])})

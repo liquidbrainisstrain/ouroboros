@@ -1,32 +1,38 @@
 def findmotsoneprotapp():
+    import os
+    import json
     import time
     import PySimpleGUI as sg
-    from pymongo import MongoClient
 
-    from .seq_tools import mot_finder2
+    from .seq_tools import mot_finder_sequent
     from .seq_tools import mot_changer
     from .seq_tools import seq_liner
+    from .seq_tools import fasta_to_obj
+    from .seq_tools import add_div_time
 
-    client = MongoClient()
-    db = client.proteins
-    out = db.enzymes
-    gen = db.gen_proteom_beta
+
+    ROOT = os.environ.get('ROOT')
+    proteomspath = os.path.join(ROOT, "data", "proteoms")
+    builds = os.path.join(ROOT, "data", "user_data", 'builds')
+    taxons = os.path.join(ROOT, "data", "program_data", "taxons_list.csv")
+    proteoms = os.listdir(path=proteomspath)
 
     sg.theme('DarkPurple6')
-
-    layout = [[sg.Text('Protein info')],
-              [sg.Text('Protein name'), sg.Input(key='-PROTNAME-', size=(20, 1))],
-              [sg.Text('Protein div.time'), sg.Input(key='-DT-', size=(20, 1))],
-              [sg.Text('Organism'), sg.Input(key='-ORG-', size=(20, 1))],
-              [sg.Text('ID'), sg.Input(key='-ID-', size=(20, 1))],
-              [sg.Text('Sequence'), sg.Input(key='-SEQ-', size=(20, 1))],
-              [sg.Text('Mot length'), sg.Input(key='-MOTLEN-', size=(20, 1))],
+    layout = [[sg.Frame(layout=[
+        [sg.Text('Protein name', size=(15, 1)), sg.Input(key='-PROTNAME-', size=(60, 1))],
+        [sg.Text('Species div.time', size=(15, 1)), sg.Input(key='-DT-', size=(60, 1))],
+        [sg.Text('Organism', size=(15, 1)), sg.Input(key='-ORG-', size=(60, 1))],
+        [sg.Text('ID', size=(15, 1)), sg.Input(key='-ID-', size=(60, 1))],
+        [sg.Text('Sequence', size=(15, 1)), sg.MLine(key='-SEQ-', enter_submits=True, size=(60, 5))]
+    ], title='Protein info', title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='')],
+        [sg.Text('Mot length'), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), size=(5,1), initial_value=8),
+         sg.Text('Proteom'), sg.Combo(proteoms, size=(40,1), key="-PROTEOM-"), sg.FileBrowse()],
               [sg.MLine(size=(80, 12), k='-ML-', reroute_stdout=True, write_only=True, autoscroll=True,
                         auto_refresh=True)],
-              [sg.Text('Proteom pass through'),
-               sg.ProgressBar(100, size=(20, 20), orientation='h', key='-PROTEOMPROG-')],
-              [sg.Text('Diffuse search'), sg.ProgressBar(100, size=(20, 20), orientation='h', key='-DIFFUSE-')],
-              [sg.Button('Start'), sg.Button('Exit')]]
+              [sg.Text('Proteom pass cycle', size=(20, 1)),
+               sg.ProgressBar(100, size=(40, 20), orientation='h', key='-PROTEOMPROG-')],
+              [sg.Text('Diffuse search', size=(20, 1)), sg.ProgressBar(100, size=(40, 20), orientation='h', key='-DIFFUSE-')],
+              [sg.Button('Back'), sg.Button('Start', size=(67, 1), border_width=2), sg.Button('Info')]]
 
     window = sg.Window('Find mots for block and build tools', layout, finalize=True)
 
@@ -34,21 +40,27 @@ def findmotsoneprotapp():
     while True:
         event, values = window.read()
         # print(event, values)
-        if event in (sg.WIN_CLOSED, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Back'):
             break
         elif event == 'Start':
+            del values['Browse']
             if '' not in values.values():
                 protein1 = {'name': values['-PROTNAME-'],
                             'id': values['-ID-'],
                             'organism': values['-ORG-'],
                             'dT': int(values['-DT-']),
-                            'seq': values['-SEQ-'],
+                            'seq': values['-SEQ-'].upper(),
                             'mots': []}
                 motlen = int(values['-MOTLEN-'])
-                gproteom = [i for i in gen.find()]
+                if values["-PROTEOM-"] in proteoms:
+                    gproteom = fasta_to_obj(os.path.join(proteomspath, values["-PROTEOM-"]))
+                else:
+                    gproteom = fasta_to_obj(values["-PROTEOM-"])
+                gproteom = add_div_time(taxons, gproteom)
                 proteom_size = len(gproteom)
 
                 st_time = time.time()
+                print('Search for mots started')
                 # find all mots
 
                 c = 0
@@ -59,7 +71,7 @@ def findmotsoneprotapp():
                         break
                     else:
                         c += 1
-                        res = mot_finder2(seq1, prot['seq'], motlen)
+                        res = mot_finder_sequent(seq1, prot['seq'], motlen)
                         if len(res) > 0:
                             for i in res:
                                 mots.append(i)
@@ -89,7 +101,7 @@ def findmotsoneprotapp():
                             if mot in pr['seq']:
                                 obj = {'name': pr['name'],
                                        'organism': pr['organism'],
-                                       'dT': pr['div_time'],
+                                       'dT': pr['dT'],
                                        'seq': pr['seq'],
                                        'motst': pr['seq'].find(mot),
                                        'motend': pr['seq'].find(mot) + len(mot),
@@ -111,11 +123,14 @@ def findmotsoneprotapp():
                     window['-DIFFUSE-'].update_bar(dif, len(mots))
                     protein1['mots'].append(mot_obj)
 
+
                 # alignment
                 for mot in protein1['mots']:
                     mot['finds'] = seq_liner(mot['finds'])
                     mot['finds'] = sorted(mot['finds'], key=lambda item: item["dT"], reverse=True)
 
                 print("--- %s seconds ----" % (time.time() - st_time))
-                out.insert_one(protein1)
+                filename = f'{builds}/{protein1["name"]}-{protein1["organism"]}-build.json'
+                with open(filename, 'w') as file:
+                    file.write(json.dumps(protein1, indent=4, sort_keys=True))
     window.Close()

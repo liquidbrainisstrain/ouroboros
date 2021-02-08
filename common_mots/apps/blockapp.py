@@ -1,27 +1,30 @@
 def blockapp(protein):
+    import json
+    import os
     import textwrap
 
     import PySimpleGUI as sg
-    from pymongo import MongoClient
 
     from .seq_tools import makeblock
     from .seq_tools import clean_block
     from .seq_tools import freq_check
 
-    # db init
-    client = MongoClient()
-    db = client.proteins
-    data = db.enzymes
-    work_protein = data.find_one({'name':protein})
+    ROOT = os.environ.get('ROOT')
+    work_protein = os.path.join(ROOT, 'data', 'user_data', 'builds', protein)
 
-    sg.theme('BluePurple')
+    with open(work_protein, 'r') as file:
+        work_protein = json.loads(file.read())
+
+    print(work_protein)
+
+    sg.theme('DarkPurple6')
 
     motslist = [i['mot'] for i in work_protein['mots']]
 
-    layout = [[sg.Text('Анализируемый мот'), sg.Combo(motslist, key='mot', size=(20, 5)),
-               sg.Text(size=(15, 1), key='motout')],
+    layout = [[sg.Text('Анализируемый мот'), sg.Combo(motslist, key="-MOT-", size=(20, 5), default_value=motslist[0]),
+               sg.Text(size=(15, 1), key="-MOTOUT-")],
               [sg.Text('Размер блока'), sg.Slider(range=(10, 70),
-                                                  key='size',
+                                                  key="-SIZE-",
                                                   default_value=30,
                                                   size=(20, 15),
                                                   orientation='horizontal',
@@ -29,7 +32,7 @@ def blockapp(protein):
               [sg.Button('Make block'), sg.Button('Exit')],
               ]
 
-    window = sg.Window('Работа с блоком', layout)
+    window = sg.Window('Work with block', layout)
 
     # ------------ window Event Loop--------------
     while True:
@@ -37,12 +40,12 @@ def blockapp(protein):
         # print(event, values)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
-        if event == 'Make block':
-            window['motout'].Update(values['mot'])
+        elif event == 'Make block':
+            window["-MOTOUT-"].Update(values["-MOT-"])
             for i in work_protein['mots']:
-                if i['mot']==values['mot']:
+                if i['mot'] == values["-MOT-"]:
                     info = i
-            res = makeblock(info=info, size=int(values['size']))
+            res = makeblock(info=info, size=int(values["-SIZE-"]))
 
             headers = ['block', 'name', 'organism', 'dT']
             weights = res['block_weights']
@@ -55,11 +58,11 @@ def blockapp(protein):
             data = [[i['block'], i['name'], i['organism'], i['dT']] for i in res['finds']]
             window.Hide()
             tab1_layout = [
-                [sg.Text(f'Анализируемый мот {values["mot"]}')],
+                [sg.Text(f'Анализируемый мот {values["-MOT-"]}')],
                 [sg.Table(values=data,
                           justification="left",
                           headings=headers,
-                          font=('Courier New', 12),
+                          font=('Courier New', 14),
                           num_rows=20,
                           max_col_width=50,
                           key='-OUT1-')],

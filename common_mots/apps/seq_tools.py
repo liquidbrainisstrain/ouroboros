@@ -105,7 +105,7 @@ def mot_finder(seq1, seq2, motlen = 10, cleaner='on'):
         return clean
     return mots
 
-def mot_finder2(seq1, seq2, motlen=9, cleaner='on'):
+def mot_finder_sequent(seq1, seq2, motlen=9, cleaner='on'):
     fL = 0
     lL = motlen
     mots = []
@@ -215,3 +215,19 @@ def fasta_to_obj(proteom):
 
     return out_obj
 
+def add_div_time(filename, new_proteom):
+    dt = {}
+    with open(filename, 'r') as file:
+        for line in file:
+            line = line.strip('\n').split(',')
+            # print(line)
+            if line[0] not in dt.keys():
+                dt.update({line[0]: line[1]})
+
+    for protein in new_proteom:
+        spec = protein['organism'].split(' ')[0]
+        if spec in dt.keys():
+            protein.update({'dT': float(dt[spec])})
+        else:
+            protein.update({'dT': -1})
+    return new_proteom

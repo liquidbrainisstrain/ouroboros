@@ -10,22 +10,22 @@ def findprotapp():
     params = ['name', 'id', 'organism', 'seq']
     proteomspath = os.path.join(ROOT, "data", "proteoms")
     proteoms = os.listdir(path=proteomspath)
-    layout = [[sg.Text('Proteom'), sg.Combo(proteoms, key="-PROTEOM-"), sg.FileBrowse()],
-              [sg.Text('Search keyword'), sg.Input(key="-PATTERN-", size=(40, 5))],
-              [sg.Button("Find in"), sg.Combo(params, key='-SPARAM-', size=(40, 5), default_value=params[0]),
-               sg.Checkbox('Output to file', key='-OUTPUT-')],
+    layout = [[sg.Text('Proteom', size=(12, 1)), sg.Combo(proteoms, size=(55, 1), key="-PROTEOM-"), sg.FileBrowse()],
+              [sg.Text('Search keyword', size=(12, 1)), sg.Input(key="-PATTERN-", size=(40, 1)), sg.Text("Search in"),
+               sg.InputOptionMenu(params, key='-SPARAM-', size=(10, 5), text_color='black', default_value=params[0])],
               [sg.MLine(size=(80, 12), key='-ML-', reroute_stdout=True, write_only=True, autoscroll=True,
                         auto_refresh=True)],
-              [sg.Button("Exit")]]
+              [sg.Button("Back"), sg.Button("Find", size=(40, 1), pad=(20,1)),
+               sg.Checkbox('Output to file', key='-OUTPUT-'), sg.Button('Info', pad=(20, 1))]]
 
     window = sg.Window('Find Protein in Proteom', layout)
 
     while True:
         event, values = window.read()
         print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event == sg.WIN_CLOSED or event == 'Back':
             break
-        if event == "Find in":
+        if event == "Find":
             if values["-PROTEOM-"] in proteoms:
                 proteom = fasta_to_obj(os.path.join(proteomspath, values["-PROTEOM-"]))
             else:
