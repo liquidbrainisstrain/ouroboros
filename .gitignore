@@ -13,3 +13,7 @@ viruses analysis/modules.py
 obj.json
 
 common_mots/data/
+
+ouroboros/data/proteoms/
+
+ouroboros/data/user_data/
