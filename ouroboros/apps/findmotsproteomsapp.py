@@ -6,19 +6,21 @@ def findmotsproteomsapp():
     import PySimpleGUI as sg
 
     from .seq_tools import fasta_to_obj, mot_finder, mot_finder_sequent
+    from .infoapp import compare_proteoms_info
 
     sg.theme('DarkPurple6')
     stype = ['sequent', 'casual']
     ROOT = os.environ.get('ROOT')
     proteomspath = os.path.join(ROOT, "data", "proteoms")
+    result_file_path = os.path.join(ROOT, "data", "user_data")
     proteoms = os.listdir(path=proteomspath)
 
     layout = [
         [sg.Text('FROM proteom path', size=(17,1)), sg.Combo(proteoms, key="-PATHFROM-", size=(40,1)), sg.FileBrowse()],
         [sg.Text('TO proteom path', size=(17,1)), sg.Combo(proteoms, key="-PATHTO-", size=(40,1)), sg.FileBrowse()],
-        [sg.Text('Mot length'), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), size=(5,1), initial_value=8),
+        [sg.Text('Mot length'), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), key="-MOTLEN-", size=(5,1), initial_value=8),
          sg.Text("Search way"), sg.InputOptionMenu(stype, key='-STYPE-', size=(10, 5), text_color='black')],
-        [sg.Text("Press GO to start, don't worry, it may take a while")],
+        [sg.Text('Out file path', size=(13,1)), sg.Input(default_text=result_file_path, key='-FILEPATH-'), sg.FolderBrowse()],
         [sg.Text('Proteom pass through'), sg.ProgressBar(100, size=(34, 20), orientation='h', key='-PROTEOMPROG-')],
         [sg.Button('Back'), sg.Button('Start'), sg.Button('Info')]
     ]
@@ -28,12 +30,27 @@ def findmotsproteomsapp():
     while True:  # Event Loop
         event, values = window.read()
         # print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Back':
+        if event == sg.WIN_CLOSED:
+            return 'Close'
+        elif event == 'Back':
             break
-        if event == 'Start':
+        elif event == 'Info':
+            window.Hide()
+            compare_proteoms_info()
+            window.UnHide()
+        elif event == 'Start':
             counter = 0
-            proteomfrom = fasta_to_obj(values["-PATHFROM-"])
-            proteomto = fasta_to_obj(values["-PATHTO-"])
+
+            if values["-PATHFROM-"] in proteoms:
+                proteomfrom = fasta_to_obj(os.path.join(proteomspath, values["-PATHFROM-"]))
+            else:
+                proteomfrom = fasta_to_obj(values["-PATHFROM-"])
+
+            if values["-PATHTO-"] in proteoms:
+                proteomto = fasta_to_obj(os.path.join(proteomspath, values["-PATHTO-"]))
+            else:
+                proteomto = fasta_to_obj(values["-PATHTO-"])
+
             total = len(proteomfrom) * len(proteomto)
             # print(total)
             motlen = int(values['-MOTLEN-'])
@@ -58,7 +75,7 @@ def findmotsproteomsapp():
                                               'protein': f'{proteinto["name"]}/{proteinto["organism"]}/{proteinto["id"]}'}
                                     mots.append(motobj)
                                     seq1 = seq1.replace(i, "_")
-                else: #casual type if search
+                else: #casual type of search
                     for proteinto in proteomto:
                         counter += 1
                         if counter % 100 == 0:
@@ -82,10 +99,9 @@ def findmotsproteomsapp():
                     mots = sorted(mots, key=lambda item: item["pos"], reverse=False)
                     proteinfrom.update({'mots': mots})
 
-            pprint.pprint(proteomfrom)
             window['-PROTEOMPROG-'].update_bar(1, 1)
-            outfilepath = '/Users/liquidbrain/projects/proteomics/common_mots/data/user_data/' #нужно изменить
-            filename = f'{outfilepath}{str(proteomfrom[0]["organism"])}{motlen}{str(proteomto[0]["organism"])}.csv'
+            outfilepath = values['-FILEPATH-']
+            filename = f'{outfilepath}{str(proteomfrom[0]["organism"])}{motlen}{str(proteomto[0]["organism"])}{str(time.ctime())}.csv'
             print("--- %s seconds ----" % (time.time() - start_time))
             with open(filename, 'a') as file:
                 line = f'Proteom of {proteomfrom[0]["organism"]}; MOT - Protein name/Organism/Uniprot ID\n'

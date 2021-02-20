@@ -2,6 +2,7 @@ def findprotapp():
     import os
     import time
     from .seq_tools import fasta_to_obj
+    from .infoapp import find_protein_info
     import PySimpleGUI as sg
 
 
@@ -22,10 +23,15 @@ def findprotapp():
 
     while True:
         event, values = window.read()
-        print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Back':
+        if event == sg.WIN_CLOSED:
+            return 'Close'
+        elif event == 'Back':
             break
-        if event == "Find":
+        elif event == "Info":
+            window.Hide()
+            find_protein_info()
+            window.UnHide()
+        elif event == "Find":
             if values["-PROTEOM-"] in proteoms:
                 proteom = fasta_to_obj(os.path.join(proteomspath, values["-PROTEOM-"]))
             else:
@@ -33,6 +39,8 @@ def findprotapp():
 
             pattern = values['-PATTERN-']
             param = values['-SPARAM-']
+            if param == 'seq':
+                pattern = pattern.upper()
             line0 = f'Search pattern: {pattern}, Search by {param}'
             line = f'Search pattern: {pattern}, Search by {param}'
             print(line0)

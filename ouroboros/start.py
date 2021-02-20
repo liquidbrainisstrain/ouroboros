@@ -6,6 +6,7 @@ from apps.blockapp import blockapp
 from apps.findmotsoneprotapp import findmotsoneprotapp
 from apps.findmotsproteomsapp import findmotsproteomsapp
 from apps.findprotapp import findprotapp
+from apps.infoapp import main_page_info
 
 os.environ['ROOT'] = os.path.dirname(os.path.abspath(__name__))
 
@@ -15,7 +16,8 @@ builds = os.listdir(path=os.path.join(os.environ['ROOT'], "data", "user_data", '
 
 column1 = [[sg.Button('Find Protein', size=(30, 1))],
            [sg.Button('Find Mots', size=(30, 1))],
-           [sg.Button('Compare Proteoms', size=(30, 1))]]
+           [sg.Button('Compare Proteoms', size=(30, 1))],
+           [sg.Button('Align Sequences', size=(30, 1))]]
 
 column2 = [[sg.Combo(builds, key='-PROTEIN-', size=(29, 2), enable_events=True)],
            [sg.Button('Analyse Block', size=(30, 1), disabled=True)],
@@ -24,7 +26,7 @@ column2 = [[sg.Combo(builds, key='-PROTEIN-', size=(29, 2), enable_events=True)]
 layout0 = [
     [sg.Frame(layout=[[sg.Column(column1, size=(200, 90))]], title='Mots', title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags'),
      sg.Frame(layout=[[sg.Column(column2, size=(200, 90))]], title='Build', title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],
-    [sg.Button('Exit'), sg.Button('Info'), sg.Text('Program made by Alex Terekhov. Version 3.5', justification='right')]
+    [sg.Button('Exit'), sg.Button('Info'), sg.Text('OUROBOROS made by Alex Terekhov. Version 0.6', justification='right')]
     ]
 
 window0 = sg.Window('OUROBOROS', layout0)
@@ -36,24 +38,34 @@ while True:  # Event Loop
         break
     elif event0 == 'Find Protein':
         window0.Hide()
-        findprotapp()
+        win = findprotapp()
+        if win == "Close":
+            break
         window0.UnHide()
     elif event0 == 'Find Mots':
         window0.Hide()
-        findmotsoneprotapp()
+        win = findmotsoneprotapp()
+        if win == "Close":
+            break
         window0.UnHide()
     elif event0 == '-PROTEIN-' and values0['-PROTEIN-']!='':
         window0['Analyse Block'].Update(disabled=False)
     elif event0 == 'Analyse Block':
         window0.Hide()
-        blockapp(values0['-PROTEIN-'])
+        win = blockapp(values0['-PROTEIN-'])
+        if win == "Close":
+            break
         window0.UnHide()
     elif event0 == 'Compare Proteoms':
         window0.Hide()
-        findmotsproteomsapp()
+        win = findmotsproteomsapp()
+        if win == "Close":
+            break
         window0.UnHide()
     elif event0 == 'Info':
-        sg.popup_ok('Program made by Alex Terekhov. Version 3.5')
+        window0.Hide()
+        main_page_info()
+        window0.UnHide()
 
 
 

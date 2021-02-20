@@ -8,6 +8,7 @@ def blockapp(protein):
     from .seq_tools import makeblock
     from .seq_tools import clean_block
     from .seq_tools import freq_check
+    from .infoapp import analyze_block_info
 
     ROOT = os.environ.get('ROOT')
     work_protein = os.path.join(ROOT, 'data', 'user_data', 'builds', protein)
@@ -15,31 +16,39 @@ def blockapp(protein):
     with open(work_protein, 'r') as file:
         work_protein = json.loads(file.read())
 
-    print(work_protein)
+    # print(work_protein)
 
     sg.theme('DarkPurple6')
 
     motslist = [i['mot'] for i in work_protein['mots']]
 
-    layout = [[sg.Text('Анализируемый мот'), sg.Combo(motslist, key="-MOT-", size=(20, 5), default_value=motslist[0]),
-               sg.Text(size=(15, 1), key="-MOTOUT-")],
-              [sg.Text('Размер блока'), sg.Slider(range=(10, 70),
-                                                  key="-SIZE-",
-                                                  default_value=30,
-                                                  size=(20, 15),
-                                                  orientation='horizontal',
-                                                  font=('Helvetica', 12))],
-              [sg.Button('Make block'), sg.Button('Exit')],
+    layout = [[sg.Frame(layout=[[sg.Text('Mot for analyze'),
+                                 sg.Combo(motslist, key="-MOT-", size=(20, 5), default_value=motslist[0]),
+                                 sg.Text(size=(15, 1), key="-MOTOUT-")],
+                                [sg.Text('Block size'), sg.Slider(range=(10, 70),
+                                                                  key="-SIZE-",
+                                                                  default_value=30,
+                                                                  size=(20, 15),
+                                                                  orientation='horizontal',
+                                                                  font=('Courier New', 14))]],
+                        title='Block options', title_color='red', font=('Courier New', 15))],
+              [sg.Button('Make block'), sg.Button('Info'), sg.Button('Back')],
               ]
 
-    window = sg.Window('Work with block', layout)
+    window = sg.Window('Choose mot for Block', layout)
 
     # ------------ window Event Loop--------------
     while True:
         event, values = window.read()
         # print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event == sg.WIN_CLOSED:
+            return 'Close'
+        elif event == 'Back':
             break
+        elif event == 'Info':
+            window.Hide()
+            analyze_block_info()
+            window.UnHide()
         elif event == 'Make block':
             window["-MOTOUT-"].Update(values["-MOT-"])
             for i in work_protein['mots']:
@@ -78,19 +87,24 @@ def blockapp(protein):
                                      num_rows=20,
                                      max_col_width=100,
                                      key='-OUT2-')]]
-            layout2 = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layout)]])],
-                       [sg.Button('Save'), sg.Button('Copy selected'), sg.Button('Exit')]]
+            layout2 = [[sg.TabGroup([[sg.Tab('Block', tab1_layout), sg.Tab('Positions', tab2_layout)]])],
+                       [sg.Button('Save'), sg.Button('Copy selected'), sg.Button('Info'), sg.Button('Back')]]
             window2 = sg.Window('Анализ блока', layout2)
             # ----------------------window2 Event Loop-----------------------------
             while True:
                 event2, values2 = window2.read()
                 # print(event2, values2)
-                if event2 is None or event2 == 'Exit':
+                if event2 == sg.WIN_CLOSED:
+                    return 'Close'
+                elif event2 == 'Back':
                     window2.close()
                     window.UnHide()
                     break
-
-                if event2 == 'Filter':
+                elif event2 == 'Info':
+                    window2.Hide()
+                    analyze_block_info()
+                    window2.UnHide()
+                elif event2 == 'Filter':
                     if values2['lettimes'] != '':
                         res = clean_block(res, lettimes=int(values2['lettimes']))
                         data = [[i['cblock'], i['name'], i['organism'], i['dT']] for i in res['finds']]

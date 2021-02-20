@@ -4,11 +4,8 @@ def findmotsoneprotapp():
     import time
     import PySimpleGUI as sg
 
-    from .seq_tools import mot_finder_sequent
-    from .seq_tools import mot_changer
-    from .seq_tools import seq_liner
-    from .seq_tools import fasta_to_obj
-    from .seq_tools import add_div_time
+    from .seq_tools import mot_finder_sequent, mot_changer, seq_liner, fasta_to_obj, add_div_time
+    from .infoapp import find_mots_info
 
 
     ROOT = os.environ.get('ROOT')
@@ -40,8 +37,14 @@ def findmotsoneprotapp():
     while True:
         event, values = window.read()
         # print(event, values)
-        if event in (sg.WIN_CLOSED, 'Back'):
+        if event == sg.WIN_CLOSED:
+            return 'Close'
+        elif event == 'Back':
             break
+        elif event == 'Info':
+            window.Hide()
+            find_mots_info()
+            window.UnHide()
         elif event == 'Start':
             del values['Browse']
             if '' not in values.values():
