@@ -33,10 +33,10 @@ def main_page_info():
                   }}
 
     tab_rus_layout = [[sg.Text('OUROBOROS', justification='center', text_color='blue', size=(70,1), font=('Helvetica', 18))],
-                     [sg.Text(info0_text_rus['main'], font=('Courier New', 14), size=(100, (len(info0_text_rus['main'])//100 + 1)))],
+                     [sg.Text(info0_text_rus['main'], font=('Courier New', 12), size=(100, (len(info0_text_rus['main'])//100 + 1)))],
                      [sg.Frame(layout=[
                          [sg.Frame(layout=[[sg.Text(info0_text_rus['tools'][i]['toolinfo'],
-                                                    font=('Courier New', 14),
+                                                    font=('Courier New', 12),
                                                     size=(100, (len(info0_text_rus['tools'][i]['toolinfo'])//100 + 1)))]
                                            ],
                                    title_color='red',
@@ -48,11 +48,11 @@ def main_page_info():
                      [sg.Text(info0_text['main'], font=('Courier New', 14), size=(100, (len(info0_text['main'])//100 + 1)))],
                      [sg.Frame(layout=[
                          [sg.Frame(layout=[[sg.Text(info0_text['tools'][i]['toolinfo'],
-                                                    font=('Courier New', 14),
+                                                    font=('Courier New', 12),
                                                     size=(100, (len(info0_text['tools'][i]['toolinfo'])//100 + 1)))]
                                            ],
                                    title_color='red',
-                                   font=('Courier New', 14),
+                                   font=('Courier New', 12),
                                    title=info0_text_rus['tools'][i]['toolname'])] for i in info0_text['tools'].keys()
                      ], title="Tools", title_color='red', font=('Courier New', 16))]]
 
@@ -86,12 +86,12 @@ def find_protein_info():
                      'Output': ''}
 
     tab_rus_layout = [[sg.Frame(layout=[[sg.Text(info_text_rus[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_rus[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_rus.keys()]
 
     tab_eng_layout = [[sg.Frame(layout=[[sg.Text(info_text_eng[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_eng[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_eng.keys()]
 
@@ -137,12 +137,12 @@ def analyze_block_info():
                      'Copy and output': ''}
 
     tab_rus_layout = [[sg.Frame(layout=[[sg.Text(info_text_rus[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_rus[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_rus.keys()]
 
     tab_eng_layout = [[sg.Frame(layout=[[sg.Text(info_text_eng[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_eng[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_eng.keys()]
 
@@ -181,12 +181,12 @@ def compare_proteoms_info():
                      'Output file path': ''}
 
     tab_rus_layout = [[sg.Frame(layout=[[sg.Text(info_text_rus[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_rus[i])//100 + 1) + info_text_rus[i].count('\n')))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_rus.keys()]
 
     tab_eng_layout = [[sg.Frame(layout=[[sg.Text(info_text_eng[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_eng[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_eng.keys()]
 
@@ -226,12 +226,12 @@ def find_mots_info():
                      'Output':''}
 
     tab_rus_layout = [[sg.Frame(layout=[[sg.Text(info_text_rus[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_rus[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_rus.keys()]
 
     tab_eng_layout = [[sg.Frame(layout=[[sg.Text(info_text_eng[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_eng[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_eng.keys()]
 
@@ -256,22 +256,32 @@ def align_seqs_info():
     'info':'',
     'output':''}
 
-    info_text_eng = {}
+    info_text_eng = {'main':'',
+    'info':'',
+    'output':''}
 
     tab_rus_layout = [[sg.Frame(layout=[[sg.Text(info_text_rus[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_rus[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_rus.keys()]
 
     tab_eng_layout = [[sg.Frame(layout=[[sg.Text(info_text_eng[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_eng[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_eng.keys()]
 
-    layout_info = []
+    layout_info = [[sg.TabGroup([[sg.Tab('English', tab_eng_layout), sg.Tab('Russian', tab_rus_layout)]])],
+                   [sg.Button('Back')]]
 
+    window_info = sg.Window('Find Mots info', layout_info)
 
-    window_info = sg.Window('Make build info', layout_info)
+    while True:  # Event Loop
+        event_i, values_i = window_info.read()
+        # print(event0, values0)
+        if event_i == sg.WIN_CLOSED or event_i == 'Back':
+            break
+
+    window_info.close()
 
     while True:  # Event Loop
         event_i, values_i = window_info.read()
@@ -290,12 +300,12 @@ def make_build_info():
     info_text_eng = {}
 
     tab_rus_layout = [[sg.Frame(layout=[[sg.Text(info_text_rus[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_rus[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_rus.keys()]
 
     tab_eng_layout = [[sg.Frame(layout=[[sg.Text(info_text_eng[i],
-                                                 font=('Courier New', 14),
+                                                 font=('Courier New', 12),
                                                  size=(100, (len(info_text_eng[i])//100 + 1)))]],
                                 title=i, title_color='red', font=('Courier New', 15))] for i in info_text_eng.keys()]
 

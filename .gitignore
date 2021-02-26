@@ -1,18 +1,15 @@
 
 __pycache__/
+
 .Rproj.user
 
 .DS_Store
 
 .idea/
 
-bioregulation/.Rhistory
-
 viruses analysis/modules.py
 
 obj.json
-
-common_mots/data/
 
 ouroboros/data/proteoms/
 

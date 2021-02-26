@@ -190,6 +190,45 @@ def seq_liner(proteins=list):
 
     return(proteins)
 
+def two_seqs_liner(mot=str, seqs=list):
+    new_seqs = []
+    mot_seq = mot
+
+    c = 0
+    for i in range(len(seqs)):
+        mot_pos1 = seqs[i].find(mot_seq)
+        if mot_pos1 > c:
+            c = mot_pos1
+
+    for seq in seqs:
+        mp = seq.find(mot_seq)
+        new_seq = ('_' * (c - mp) + seq)
+        # mp = new_seq.find(mot_seq)
+        # new_seq = new_seq[:mp] + new_seq[mp:mp + len(mot_seq)] + new_seq[mp + len(mot_seq):]
+        new_seqs.append(new_seq)
+
+    sequence1 = new_seqs[0]
+    sequence2 = new_seqs[1]
+    с = 0
+    gen_letters = ''
+    if len(sequence1) < len(sequence2):
+        for i in range(len(sequence1)):
+            if sequence1[i] == sequence2[i]:
+                gen_letters = gen_letters + sequence1[i]
+                с+=1
+            else:
+                gen_letters = gen_letters + '_'
+        homology = round(с / len(sequence1.strip('_')) * 100, 2)
+    else:
+        for i in range(len(sequence2)):
+            if sequence1[i] == sequence2[i]:
+                gen_letters = gen_letters + sequence1[i]
+                с+=1
+            else:
+                gen_letters = gen_letters + '_'
+        homology = round(с / len(sequence2.strip('_')) * 100, 2)
+    return [sequence1, sequence2, gen_letters, homology]
+
 def fasta_to_obj(proteom):
     from itertools import groupby
     def fasta_iter(fasta_name):

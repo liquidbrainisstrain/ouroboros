@@ -1,11 +1,11 @@
-def findmotsoneprotapp():
+def find_mots_app():
     import os
     import json
     import time
     import PySimpleGUI as sg
 
     from .seq_tools import mot_finder_sequent, mot_changer, seq_liner, fasta_to_obj, add_div_time
-    from .infoapp import find_mots_info
+    from .info_app import find_mots_info
 
 
     ROOT = os.environ.get('ROOT')
@@ -16,19 +16,19 @@ def findmotsoneprotapp():
 
     sg.theme('DarkPurple6')
     layout = [[sg.Frame(layout=[
-        [sg.Text('Protein name', size=(15, 1)), sg.Input(key='-PROTNAME-', size=(60, 1))],
-        [sg.Text('Species div.time', size=(15, 1)), sg.Input(key='-DT-', size=(60, 1))],
-        [sg.Text('Organism', size=(15, 1)), sg.Input(key='-ORG-', size=(60, 1))],
-        [sg.Text('ID', size=(15, 1)), sg.Input(key='-ID-', size=(60, 1))],
-        [sg.Text('Sequence', size=(15, 1)), sg.MLine(key='-SEQ-', enter_submits=True, size=(60, 5))]
+        [sg.Text('Protein name', size=(15, 1), font=('Helvetica', 14)), sg.Input(key='-PROTNAME-', size=(60, 1))],
+        [sg.Text('Species div.time', size=(15, 1), font=('Helvetica', 14)), sg.Input(key='-DT-', size=(60, 1))],
+        [sg.Text('Organism', size=(15, 1), font=('Helvetica', 14)), sg.Input(key='-ORG-', size=(60, 1))],
+        [sg.Text('ID', size=(15, 1), font=('Helvetica', 14)), sg.Input(key='-ID-', size=(60, 1))],
+        [sg.Text('Sequence', size=(15, 1), font=('Helvetica', 14)), sg.MLine(key='-SEQ-', enter_submits=True, size=(60, 5))]
     ], title='Protein info', title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='')],
-        [sg.Text('Mot length'), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), size=(5,1), initial_value=8),
-         sg.Text('Proteom'), sg.Combo(proteoms, size=(40,1), key="-PROTEOM-"), sg.FileBrowse()],
-              [sg.MLine(size=(80, 12), k='-ML-', reroute_stdout=True, write_only=True, autoscroll=True,
+        [sg.Text('Mot length', font=('Helvetica', 14)), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), size=(5,1), initial_value=8),
+         sg.Text('Proteom', font=('Helvetica', 14)), sg.Combo(proteoms, size=(40,1), key="-PROTEOM-"), sg.FileBrowse()],
+              [sg.MLine(size=(85, 12), k='-ML-', reroute_stdout=True, write_only=True, autoscroll=True,
                         auto_refresh=True)],
-              [sg.Text('Proteom pass cycle', size=(20, 1)),
+              [sg.Text('Proteom pass cycle', size=(20, 1), font=('Helvetica', 14)),
                sg.ProgressBar(100, size=(40, 20), orientation='h', key='-PROTEOMPROG-')],
-              [sg.Text('Diffuse search', size=(20, 1)), sg.ProgressBar(100, size=(40, 20), orientation='h', key='-DIFFUSE-')],
+              [sg.Text('Diffuse search', size=(20, 1), font=('Helvetica', 14)), sg.ProgressBar(100, size=(40, 20), orientation='h', key='-DIFFUSE-')],
               [sg.Button('Back'), sg.Button('Start', size=(67, 1), border_width=2), sg.Button('Info')]]
 
     window = sg.Window('Find mots for block and build tools', layout, finalize=True)

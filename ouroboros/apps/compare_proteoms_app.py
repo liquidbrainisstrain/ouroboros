@@ -1,4 +1,4 @@
-def findmotsproteomsapp():
+def compare_proteoms_app():
     import os
     import time
     import pprint
@@ -6,7 +6,7 @@ def findmotsproteomsapp():
     import PySimpleGUI as sg
 
     from .seq_tools import fasta_to_obj, mot_finder, mot_finder_sequent
-    from .infoapp import compare_proteoms_info
+    from .info_app import compare_proteoms_info
 
     sg.theme('DarkPurple6')
     stype = ['sequent', 'casual']
@@ -16,12 +16,12 @@ def findmotsproteomsapp():
     proteoms = os.listdir(path=proteomspath)
 
     layout = [
-        [sg.Text('FROM proteom path', size=(17,1)), sg.Combo(proteoms, key="-PATHFROM-", size=(40,1)), sg.FileBrowse()],
-        [sg.Text('TO proteom path', size=(17,1)), sg.Combo(proteoms, key="-PATHTO-", size=(40,1)), sg.FileBrowse()],
-        [sg.Text('Mot length'), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), key="-MOTLEN-", size=(5,1), initial_value=8),
-         sg.Text("Search way"), sg.InputOptionMenu(stype, key='-STYPE-', size=(10, 5), text_color='black')],
-        [sg.Text('Out file path', size=(13,1)), sg.Input(default_text=result_file_path, key='-FILEPATH-'), sg.FolderBrowse()],
-        [sg.Text('Proteom pass through'), sg.ProgressBar(100, size=(34, 20), orientation='h', key='-PROTEOMPROG-')],
+        [sg.Text('FROM proteom path', size=(17,1), font=('Helvetica', 14)), sg.Combo(proteoms, key="-PATHFROM-", size=(40,1)), sg.FileBrowse()],
+        [sg.Text('TO proteom path', size=(17,1), font=('Helvetica', 14)), sg.Combo(proteoms, key="-PATHTO-", size=(40,1)), sg.FileBrowse()],
+        [sg.Text('Mot length', font=('Helvetica', 14)), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), key="-MOTLEN-", size=(5,1), initial_value=8),
+         sg.Text("Search way", font=('Helvetica', 14)), sg.InputOptionMenu(stype, key='-STYPE-', size=(10, 5), text_color='black')],
+        [sg.Text('Out file path', size=(13,1), font=('Helvetica', 14)), sg.Input(default_text=result_file_path, key='-FILEPATH-'), sg.FolderBrowse()],
+        [sg.Text('Proteom pass through', font=('Helvetica', 14)), sg.ProgressBar(100, size=(34, 20), orientation='h', key='-PROTEOMPROG-')],
         [sg.Button('Back'), sg.Button('Start'), sg.Button('Info')]
     ]
 

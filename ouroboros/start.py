@@ -1,35 +1,34 @@
 import os
+import sys
 
 import PySimpleGUI as sg
 
-from apps.blockapp import blockapp
-from apps.findmotsoneprotapp import findmotsoneprotapp
-from apps.findmotsproteomsapp import findmotsproteomsapp
-from apps.findprotapp import findprotapp
-from apps.infoapp import main_page_info
+from apps.block_app import block_app
+from apps.find_mots_app import find_mots_app
+from apps.compare_proteoms_app import compare_proteoms_app
+from apps.find_prot_app import find_prot_app
+from apps.aligner_app import aligner_app
+from apps.info_app import main_page_info
 
-os.environ['ROOT'] = os.path.dirname(os.path.abspath(__name__))
-
+os.environ['ROOT'] = os.path.dirname(os.path.abspath(sys.argv[0]))
+# bundle_dir = os.path.dirname(os.path.abspath(__name__))
 sg.theme('DarkPurple6')
 
 builds = os.listdir(path=os.path.join(os.environ['ROOT'], "data", "user_data", 'builds'))
 
-column1 = [[sg.Button('Find Protein', size=(30, 1))],
-           [sg.Button('Find Mots', size=(30, 1))],
-           [sg.Button('Compare Proteoms', size=(30, 1))],
-           [sg.Button('Align Sequences', size=(30, 1))]]
+tab1 = [[sg.Button('Find Protein', font=('Helvetica', 16), size=(30, 1))],
+           [sg.Button('Find Mots', font=('Helvetica', 16), size=(30, 1))],
+           [sg.Button('Compare Proteoms', font=('Helvetica', 16), size=(30, 1))],
+           [sg.Button('Align Sequences', font=('Helvetica', 16), size=(30, 1))]]
 
-column2 = [[sg.Combo(builds, key='-PROTEIN-', size=(29, 2), enable_events=True)],
-           [sg.Button('Analyse Block', size=(30, 1), disabled=True)],
-           [sg.Button('Make Build', size=(30, 1), disabled=True)]]
+tab2 = [[sg.Combo(builds, key='-PROTEIN-', size=(29, 2), font=('Helvetica', 16), enable_events=True)],
+           [sg.Button('Analyse Block', size=(30, 1), font=('Helvetica', 16), disabled=True)],
+           [sg.Button('Make Build', size=(30, 1), font=('Helvetica', 16), disabled=True)]]
 
-layout0 = [
-    [sg.Frame(layout=[[sg.Column(column1, size=(200, 90))]], title='Mots', title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags'),
-     sg.Frame(layout=[[sg.Column(column2, size=(200, 90))]], title='Build', title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],
-    [sg.Button('Exit'), sg.Button('Info'), sg.Text('OUROBOROS made by Alex Terekhov. Version 0.6', justification='right')]
-    ]
+layout = [[sg.TabGroup([[sg.Tab('Tools', tab1, font=('Helvetica', 14)), sg.Tab('Build', tab2)]])],
+                 [sg.Button('Exit'), sg.Button('Info')]]
 
-window0 = sg.Window('OUROBOROS', layout0)
+window0 = sg.Window('OUROBOROS', layout)
 
 while True:  # Event Loop
     event0, values0 = window0.read()
@@ -38,27 +37,33 @@ while True:  # Event Loop
         break
     elif event0 == 'Find Protein':
         window0.Hide()
-        win = findprotapp()
+        win = find_prot_app()
         if win == "Close":
             break
         window0.UnHide()
     elif event0 == 'Find Mots':
         window0.Hide()
-        win = findmotsoneprotapp()
+        win = find_mots_app()
         if win == "Close":
             break
         window0.UnHide()
-    elif event0 == '-PROTEIN-' and values0['-PROTEIN-']!='':
+    elif event0 == '-PROTEIN-' and values0['-PROTEIN-'] != '':
         window0['Analyse Block'].Update(disabled=False)
     elif event0 == 'Analyse Block':
         window0.Hide()
-        win = blockapp(values0['-PROTEIN-'])
+        win = block_app(values0['-PROTEIN-'])
+        if win == "Close":
+            break
+        window0.UnHide()
+    elif event0 == 'Align Sequences':
+        window0.Hide()
+        win = aligner_app()
         if win == "Close":
             break
         window0.UnHide()
     elif event0 == 'Compare Proteoms':
         window0.Hide()
-        win = findmotsproteomsapp()
+        win = compare_proteoms_app()
         if win == "Close":
             break
         window0.UnHide()
@@ -66,7 +71,5 @@ while True:  # Event Loop
         window0.Hide()
         main_page_info()
         window0.UnHide()
-
-
 
 window0.Close()
