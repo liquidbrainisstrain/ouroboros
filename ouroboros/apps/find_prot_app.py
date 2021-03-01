@@ -6,13 +6,14 @@ def find_prot_app():
     import PySimpleGUI as sg
 
 
-    sg.theme('DarkPurple6')
     ROOT = os.environ.get('ROOT')
     params = ['name', 'id', 'organism', 'seq']
     proteomspath = os.path.join(ROOT, "data", "proteoms")
     d_filename = f'search-file-{time.strftime("%m:%d:%Y-%H:%M")}'
     proteoms = os.listdir(path=proteomspath)
     user_dir = os.path.join(ROOT, "data", "user_data")
+
+    sg.theme('DarkPurple6')
     layout = [[sg.Text('Proteom', size=(14, 1), font=('Helvetica', 14)), sg.Combo(proteoms, size=(60, 1), key="-PROTEOM-"), sg.FileBrowse()],
               [sg.Text('Search keyword', size=(14, 1), font=('Helvetica', 14)), sg.Input(key="-KEYWORD-", size=(45, 1)), sg.Text("Search in"),
                sg.InputOptionMenu(params, key='-SPARAM-', size=(10, 5), text_color='black', default_value=params[0])],
