@@ -23,7 +23,7 @@ def find_prot_app():
                   [sg.Text('File name', font=('Helvetica', 14)), sg.Input(key='-FILENAME-', default_text=d_filename)]
               ], title='Save', visible=False, key='-SAVEMENU-', font=('Helvetica', 14))],
               [sg.MLine(size=(100, 12), key='-ML-', reroute_stdout=True, write_only=True, autoscroll=True, auto_refresh=True)],
-              [sg.Button("Back"), sg.Button("Find", size=(40, 1), pad=(20,1)), sg.Button('Info')]]
+              [sg.Button("Back"), sg.Button("Find", size=(70, 1), pad=(20,1)), sg.Button('Info')]]
 
     window = sg.Window('Find Protein in Proteom', layout)
 

@@ -22,8 +22,9 @@ def find_mots_app():
         [sg.Text('ID', size=(15, 1), font=('Helvetica', 14)), sg.Input(key='-ID-', size=(60, 1))],
         [sg.Text('Sequence', size=(15, 1), font=('Helvetica', 14)), sg.MLine(key='-SEQ-', enter_submits=True, size=(60, 5))]
     ], title='Protein info', title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='')],
-        [sg.Text('Mot length', font=('Helvetica', 14)), sg.Spin(values=(6, 7, 8, 9, 10, 11, 12), size=(5,1), initial_value=8),
-         sg.Text('Proteom', font=('Helvetica', 14)), sg.Combo(proteoms, size=(40,1), key="-PROTEOM-"), sg.FileBrowse()],
+        [sg.Text('Mot length', font=('Helvetica', 14)), sg.Spin(values=(5, 6, 7, 8, 9, 10, 11, 12), size=(5,1), initial_value=8, key='-MOTLEN-'),
+         sg.Checkbox('Make Build', default=True, font=("Helvetica", 14), key='-DSEARCH-')],
+         [sg.Text('Proteom', font=('Helvetica', 14)), sg.Combo(proteoms, size=(40,1), key="-PROTEOM-"), sg.FileBrowse()],
               [sg.MLine(size=(85, 12), k='-ML-', reroute_stdout=True, write_only=True, autoscroll=True,
                         auto_refresh=True)],
               [sg.Text('Proteom pass cycle', size=(20, 1), font=('Helvetica', 14)),
@@ -62,6 +63,16 @@ def find_mots_app():
                 gproteom = add_div_time(taxons, gproteom)
                 proteom_size = len(gproteom)
 
+                #hotfix cleaner
+                dels = []
+                for i in range(proteom_size):
+                    if gproteom[i]['id'] == protein1['id'] or gproteom[i]['seq'] == protein1['seq']:
+                        line = f'{gproteom[i]["name"]} has same id - {gproteom[i]["id"] == protein1["id"]}, same sequence - {gproteom[i]["seq"] == protein1["seq"]}'
+                        print(line)
+                        dels.append(gproteom[i])
+                for i in dels:
+                    gproteom.remove(i)
+
                 st_time = time.time()
                 print('Search for mots started')
                 # find all mots
@@ -90,50 +101,57 @@ def find_mots_app():
 
                 print(f'Found {len(mots)} actual mots')
                 print(mots)
-                print('Search for diffuse mots started')
-                # diffusion mots search
-                dif = 0
-                for i in mots:
-                    mot_obj = {'mot': i,
-                               'finds': []}
-                    gen_mots = mot_changer(i)
-                    lgenmots = len(gen_mots)
-                    c = 0
-                    for mot in gen_mots:
-                        for pr in gproteom:
-                            if mot in pr['seq']:
-                                obj = {'name': pr['name'],
-                                       'organism': pr['organism'],
-                                       'dT': pr['dT'],
-                                       'seq': pr['seq'],
-                                       'motst': pr['seq'].find(mot),
-                                       'motend': pr['seq'].find(mot) + len(mot),
-                                       'length': len(pr['seq'])}
-                                mot_obj['finds'].append(obj)
-                        c += 1
-                        window['-PROTEOMPROG-'].update_bar(c, lgenmots)
-                    mot_obj['finds'].append({
-                        'name': protein1['name'],
-                        'id': protein1['id'],
-                        'organism': protein1['organism'],
-                        'dT': protein1['dT'],
-                        'seq': protein1['seq'],
-                        'motst': protein1['seq'].find(i),
-                        'motend': protein1['seq'].find(i) + len(i),
-                        'length': len(protein1['seq'])})
-                    dif += 1
-                    print(dif)
-                    window['-DIFFUSE-'].update_bar(dif, len(mots))
-                    protein1['mots'].append(mot_obj)
+                if values['-DSEARCH-'] == True:
+                    print('Search for diffuse mots started')
+                    # diffusion mots search
+                    dif = 0
+                    for i in mots:
+                        mot_obj = {'mot': i,
+                                   'finds': []}
+                        gen_mots = mot_changer(i)
+                        lgenmots = len(gen_mots)
+                        c = 0
+                        for mot in gen_mots:
+                            for pr in gproteom:
+                                if mot in pr['seq']:
+                                    obj = {'name': pr['name'],
+                                           'organism': pr['organism'],
+                                           'dT': pr['dT'],
+                                           'seq': pr['seq'],
+                                           'motst': pr['seq'].find(mot),
+                                           'motend': pr['seq'].find(mot) + len(mot),
+                                           'length': len(pr['seq'])}
+                                    mot_obj['finds'].append(obj)
+                            c += 1
+                            window['-PROTEOMPROG-'].update_bar(c, lgenmots)
+                        mot_obj['finds'].append({
+                            'name': protein1['name'],
+                            'id': protein1['id'],
+                            'organism': protein1['organism'],
+                            'dT': protein1['dT'],
+                            'seq': protein1['seq'],
+                            'motst': protein1['seq'].find(i),
+                            'motend': protein1['seq'].find(i) + len(i),
+                            'length': len(protein1['seq'])})
+                        dif += 1
+                        print(dif)
+                        window['-DIFFUSE-'].update_bar(dif, len(mots))
+                        protein1['mots'].append(mot_obj)
 
+                    # alignment
+                    for mot in protein1['mots']:
+                        mot['finds'] = seq_liner(mot['finds'])
+                        mot['finds'] = sorted(mot['finds'], key=lambda item: item["dT"], reverse=True)
 
-                # alignment
-                for mot in protein1['mots']:
-                    mot['finds'] = seq_liner(mot['finds'])
-                    mot['finds'] = sorted(mot['finds'], key=lambda item: item["dT"], reverse=True)
+                    print("--- %s seconds ----" % (time.time() - st_time))
+                    filename = f'{builds}/{protein1["name"]}-{protein1["organism"]}-build{motlen}.json'
+                    with open(filename, 'w') as file:
+                        file.write(json.dumps(protein1, indent=4, sort_keys=True))
+                    sg.popup_ok('Build done')
+                else:
+                    sg.popup_ok('Work done')
 
-                print("--- %s seconds ----" % (time.time() - st_time))
-                filename = f'{builds}/{protein1["name"]}-{protein1["organism"]}-build.json'
-                with open(filename, 'w') as file:
-                    file.write(json.dumps(protein1, indent=4, sort_keys=True))
+            else:
+                print("Some values are absent")
+
     window.Close()

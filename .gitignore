@@ -7,10 +7,3 @@ __pycache__/
 
 .idea/
 
-viruses analysis/modules.py
-
-obj.json
-
-ouroboros/data/proteoms/
-
-ouroboros/data/user_data/

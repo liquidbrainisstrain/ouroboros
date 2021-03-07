@@ -16,8 +16,8 @@ def mot_finder(seq1, seq2, motlen = 10, cleaner='on'):
                 else:
                     # print("!Coincedence")
                     mots.append(seq1[fL:lL])
-                    fL = lL - motlen
-                    lL += 1
+                    fL = lL
+                    lL += motlen
                     break
         elif seq1[fL:lL] not in seq2:
             fL += 1

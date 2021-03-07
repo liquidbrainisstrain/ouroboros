@@ -75,11 +75,11 @@ def block_app(protein):
                           headings=headers,
                           font=('Courier New', 14),
                           num_rows=20,
-                          max_col_width=50,
+                          max_col_width=30,
                           key='-OUT1-')],
                 [sg.Input(key='lettimes', size=(5, 1)), sg.Text('Letter Frequency'),
-                 sg.Input(key='pos', size=(5, 1)), sg.Text('Position'), sg.Input(key='lett', size=(5, 1)),
-                 sg.Text('Letter'),
+                 sg.Frame(layout=[[sg.Input(key='pos', size=(5, 1)), sg.Text('Position'), sg.Input(key='lett', size=(5, 1)),
+                 sg.Text('Letter')]], title='Select by letter'),
                  sg.Checkbox('Splitted', key='split'), sg.Button('Filter'), sg.Button('Clean')]
             ]
             tab2_layout = [[sg.Table(values=out,
