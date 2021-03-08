@@ -55,6 +55,7 @@ def compare_proteoms_app():
             # print(total)
             motlen = int(values['-MOTLEN-'])
             start_time = time.time()
+
             if values['-STYPE-'] == 'sequent':
                 for proteinfrom in proteomfrom:
                     seq1 = proteinfrom['seq']
@@ -75,6 +76,11 @@ def compare_proteoms_app():
                                               'protein': f'{proteinto["name"]}/{proteinto["organism"]}/{proteinto["id"]}'}
                                     mots.append(motobj)
                                     seq1 = seq1.replace(i, "_")
+                    if len(mots) > 0:
+                        for mot in mots:
+                            mot.update({'pos': proteinfrom['seq'].find(mot['mot'])})
+                        mots = sorted(mots, key=lambda item: item["pos"], reverse=False)
+                        proteinfrom.update({'mots': mots})
 
             else:  # casual type of search
                 for proteinfrom in proteomfrom:
@@ -91,14 +97,12 @@ def compare_proteoms_app():
                                 motobj = {'mot': i,
                                           'protein': f'{proteinto["name"]}/{proteinto["organism"]}/{proteinto["id"]}'}
                                 mots.append(motobj)
+                    if len(mots) > 0:
+                        for mot in mots:
+                            mot.update({'pos': proteinfrom['seq'].find(mot['mot'])})
+                        mots = sorted(mots, key=lambda item: item["pos"], reverse=False)
+                        proteinfrom.update({'mots': mots})
 
-            if len(mots) > 0:
-                for mot in mots:
-                    mot.update({'pos': proteinfrom['seq'].find(mot['mot'])})
-                mots = sorted(mots, key=lambda item: item["pos"], reverse=False)
-                proteinfrom.update({'mots': mots})
-
-            pprint.pprint(proteinfrom)
             window['-PROTEOMPROG-'].update_bar(1, 1)
             outfilepath = values['-FILEPATH-']
             filename = f'{outfilepath}/{str(proteomfrom[0]["organism"])}{motlen}{str(proteomto[0]["organism"])}{str(time.ctime())}.csv'
@@ -108,15 +112,13 @@ def compare_proteoms_app():
                 file.write(line)
                 for prot in proteomfrom:
                     if 'mots' in prot.keys():
-                        line = f'{prot["name"]}; MOTs\n'
+                        line = f'{prot["name"]}; Mots count - {len(prot["mots"])} MOTs\n'
                         file.write(line)
                         for mot in prot['mots']:
                             line = f' ;{mot["mot"]} - {mot["protein"]}\n'
                             file.write(line)
-            print(outfilepath)
 
     window.Close()
-
 
 
 
