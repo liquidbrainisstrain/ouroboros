@@ -9,7 +9,7 @@ def find_prot_app():
     ROOT = os.environ.get('ROOT')
     params = ['name', 'id', 'organism', 'seq']
     proteomspath = os.path.join(ROOT, "data", "proteoms")
-    d_filename = f'search-file-{time.strftime("%m:%d:%Y-%H:%M")}'
+    d_filename = f'search-file-{time.strftime("%m_%d_%Y-%H_%M")}'
     proteoms = os.listdir(path=proteomspath)
     user_dir = os.path.join(ROOT, "data", "user_data")
 
@@ -66,12 +66,18 @@ def find_prot_app():
                         file.write(line0)
                         for protein in proteom:
                             if pattern in protein[param]:
-                                line = f'{protein["name"]}\n {protein["organism"]}\n {protein["id"]}\n {protein["seq"]}\n\n'
+                                if param == 'seq':
+                                    line = f'{protein["name"]}\n{protein["organism"]}\nPositions:[{protein["seq"].find(pattern) + 1}-{protein["seq"].find(pattern) + 1 + len(pattern)}]\n{protein["id"]}\n{protein["seq"]}\n\n'
+                                else:
+                                    line = f'{protein["name"]}\n{protein["organism"]}\n{protein["id"]}\n{protein["seq"]}\n\n'
                                 file.write(line)
                 else:
                     for protein in proteom:
                         if pattern in protein[param]:
-                            line = f'{protein["name"]}\n {protein["organism"]}\n {protein["id"]}\n {protein["seq"]}\n\n'
+                            if param == 'seq':
+                                line = f'{protein["name"]}\n{protein["organism"]}\nPositions:[{protein["seq"].find(pattern) + 1}-{protein["seq"].find(pattern) + 1 + len(pattern)}]\n{protein["id"]}\n{protein["seq"]}\n\n'
+                            else:
+                                line = f'{protein["name"]}\n{protein["organism"]}\n{protein["id"]}\n{protein["seq"]}\n\n'
                             print(line)
                     if line == line0 or line is None:
                         print('No results')

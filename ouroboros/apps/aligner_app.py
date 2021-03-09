@@ -9,7 +9,7 @@ def aligner_app():
 
     ROOT = os.environ.get('ROOT')
     user_dir = os.path.join(ROOT, "data", "user_data")
-    d_filename = f'alignment-file-{time.strftime("%m:%d:%Y-%H:%M")}'
+    d_filename = f'alignment-file-{time.strftime("%m_%d_%Y-%H_%M")}'
 
 
     layout = [[sg.Text('Protein1 Name', size=(15,1), font=('Helvetica', 14)), sg.Input(key='-PROTNAME1-', size=(80,1))],

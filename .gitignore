@@ -7,7 +7,6 @@ __pycache__/
 
 .idea/
 
-
 ouroboros/data/proteoms/herpes.fasta
 
 ouroboros/data/proteoms/homo_sapiens_10-2020.fasta
