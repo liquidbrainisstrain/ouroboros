@@ -67,7 +67,7 @@ def find_prot_app():
                         for protein in proteom:
                             if pattern in protein[param]:
                                 if param == 'seq':
-                                    line = f'{protein["name"]}\n{protein["organism"]}\nPositions:[{protein["seq"].find(pattern) + 1}-{protein["seq"].find(pattern) + 1 + len(pattern)}]\n{protein["id"]}\n{protein["seq"]}\n\n'
+                                    line = f'{protein["name"]}\n{protein["organism"]}\nPositions:[{protein["seq"].find(pattern) + 1}-{protein["seq"].find(pattern) + len(pattern)}]\n{protein["id"]}\n{protein["seq"]}\n\n'
                                 else:
                                     line = f'{protein["name"]}\n{protein["organism"]}\n{protein["id"]}\n{protein["seq"]}\n\n'
                                 file.write(line)
@@ -75,7 +75,7 @@ def find_prot_app():
                     for protein in proteom:
                         if pattern in protein[param]:
                             if param == 'seq':
-                                line = f'{protein["name"]}\n{protein["organism"]}\nPositions:[{protein["seq"].find(pattern) + 1}-{protein["seq"].find(pattern) + 1 + len(pattern)}]\n{protein["id"]}\n{protein["seq"]}\n\n'
+                                line = f'{protein["name"]}\n{protein["organism"]}\nPositions:[{protein["seq"].find(pattern) + 1}-{protein["seq"].find(pattern) + len(pattern)}]\n{protein["id"]}\n{protein["seq"]}\n\n'
                             else:
                                 line = f'{protein["name"]}\n{protein["organism"]}\n{protein["id"]}\n{protein["seq"]}\n\n'
                             print(line)

@@ -159,7 +159,7 @@ def block_app(protein):
                         text = ''
                         for i in values2['-OUT1-']:
                             for find in res['finds']:
-                                if data[i][1] == find['name'] and data[i][2] == find['organism']:
+                                if data[i][1] == find['name'] and data[i][2] == find['organism'] and data[i][0] == find['block']:
                                     text = text + f'Organism - {find["organism"]}\nProtein Name-{find["name"]}\nSequence - {find["seq"]}\nBlock - {find["block"]}\n\n'
                         layout_copy = [[sg.MLine(text, size=(80,12))],
                                    [sg.Button("Close")]]
